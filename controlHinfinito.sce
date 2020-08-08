@@ -1,9 +1,8 @@
 // HROV linearized model
 // Author: juan C. Cutipa-Luque
-// Source:
-// x=[u v r x y apsi] 
-// tau= [tau1 tau2]
-// y= [u v r x y apsi] 
+// Docente: juan C. Cutipa-Luque
+// Alumno: Jorch Mendoza Choquemamani
+//Codigo Reutilizado de un ejemplo Mostrado en Clase
 clf();         // close current figure
 clear          // clear all pasta variables
 xdel(winsid()) // close all windows
