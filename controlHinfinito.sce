@@ -22,19 +22,10 @@ C =[        0        0  -5.6191  -0.4090;
 D=[             0            0;
    1.9550e+03            0];
 
-// Reducing the model
-// X=[u, v, r]', U=[tau_u, tau_r]', Y=[u r]'
-//ap=A(1:3,1:3);  
-//bp=B(1:3,:);
-//cp=[C(1,1:3);
-//    C(3,1:3)];
-//dp=[D(1,1:2);
-//    D(3,1:2)];
 ap=A;  
 bp=B;
 cp=C;
 dp=D;
-
 
 // Controllability and Observability
 // Cc=[B, AB, A^2 B,..., A^(n-1) B]
