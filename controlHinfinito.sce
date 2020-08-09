@@ -1,46 +1,48 @@
-// HROV linearized model
+// CONTROL AEREOGENERADOR
+// Alumno: Jorch Mendoza Choquemamani
 // Author: juan C. Cutipa-Luque
 // Docente: juan C. Cutipa-Luque
-// Alumno: Jorch Mendoza Choquemamani
+
 //Codigo Reutilizado de un ejemplo Mostrado en Clase
 clf();         // close current figure
 clear          // clear all pasta variables
 xdel(winsid()) // close all windows
-A=[   0.0233   0.0013  -0.0325  -0.0035;
-  -0.4215   0.0014   0.2894   0.0502;
-        0  -0.1758  -0.0409  -0.0908;
-        0  -0.9843  -0.0911  -0.5331];
+
+A=    [0.0233    0.0052   -0.0650   -0.0280
+   -0.1054    0.0014    0.1447    0.1004
+         0   -0.3516   -0.0409   -0.3632
+         0   -0.4921   -0.0228   -0.5331]
  
-B=[    5.4816e-01   9.2914e-02;
-   1.9350e+00   5.2042e-18;
-   1.3150e+00   1.3878e-17;
-  -3.9819e+00  -1.7347e-18];
+ 
+B=[    2.1926    0.3717
+    1.9350    0.0000
+    2.6300    0.0000
+   -1.9909   -0.0000];
 
-C =[        0        0  -5.6191  -0.4090;
-        0        0        0   6.6232];
+C=[         0         0   -2.8096   -0.8180
+         0         0         0   13.2464];
 
-D=[             0            0;
-   1.9550e+03            0];
-
-ap=A;  
-bp=B;
-cp=C;
-dp=D;
+D=[           0           0
+        1955           0];
+ap_s=A;  
+bp_s=B;
+cp_s=C;
+dp_s=D;
 
 // Controllability and Observability
 // Cc=[B, AB, A^2 B,..., A^(n-1) B]
-Cc = cont_mat(ap,bp)
+Cc = cont_mat(ap_s,bp_s)
 rankCc=rank(Cc)
 //
 // O=[C; CA; CA^2;...; CA^(n-1) ]
-O = obsv_mat(ap, cp)
+O = obsv_mat(ap_s, cp_s)
 rankO=rank(O)
 // verify if the rank of Cc is n, dimension of a
 // verify if the rank of O is n, dimension of a
 
 /*             Plot singular values of LTI the model                      */
-G = syslin('c', ap, bp, cp, dp);
-poles=spec(ap)
+G = syslin('c', ap_s, bp_s, cp_s, dp_s);
+poles=spec(ap_s)
 tr  = trzeros(G)
 
 w = logspace(-3,3);
@@ -50,18 +52,7 @@ scf(0);
 plot2d("ln", w, 20*log(sv')/log(10))
 xgrid(12)
 xtitle("Singular values plot","Frequency (rad/s)", "Amplitude (dB)");
-/*                                 Scaling                                 */
 
-su = diag( [1,1] );   // scaling input
-                                    // tau_u_max=300 [N] tau_r_max=100 [Nm]
-sx = diag([1,1,1,1]);  // scaling state 
-
-sy = diag([1,1]);        // scaling output
-
-ap_s = sx*ap*inv(sx)
-bp_s = sx*bp*inv(su)
-cp_s = sy*cp*inv(sx)
-dp_s = sy*dp*inv(su)
 
 //g=minreal(g)
 G = syslin('c', ap_s, bp_s, cp_s, dp_s);
@@ -74,7 +65,7 @@ xgrid(12)
 xtitle("Singular values plot","Frequency (rad/s)", "Amplitude (dB)");
 
 
-ms=1.7;// 0.3;%1.5;    % guarantee overshot Mp < 6dB = 20*log10(2) 
+ms=1.4;// 0.3;%1.5;    % guarantee overshot Mp < 6dB = 20*log10(2) 
 wbs=0.23;//0.05;%0.23;
 ee=1e-3;//1e-4
 ki=1; // used to give more accurate adjustment to the cut-off frequency wbs
@@ -99,8 +90,8 @@ s=poly(0,'s');
 wt1=(s+wbt/mt)/(ee*s+wbt),
 wt2=wt1;
 wt=[wt1,0;0,wt2]
-//Wt=syslin('c',wt)
-Wt=blockdiag(wt1,wt2)
+Wt=syslin('c',wt)
+//Wt=blockdiag(wt1,wt2)
 
 
 //           --------     WR     ------------
@@ -121,7 +112,7 @@ xgrid(12)
 xtitle("Singular values plot inv(Ws) and inv(Wt)","Frequency (rad/s)", "Amplitude (dB)");
 
 
-[P,r]=augment(G,'ST');
+[P,r]=augment(G,'ST'); // SENSIBILIDAD 
 //[P,r]=augment(g,'SRT');
 P = blockdiag(Ws,Wt,eye(G))*P;
 //P=minreal(P);
@@ -141,7 +132,8 @@ K = ccontrg(P, [2,2], 1.3) // this is good for me and for this system
 
 // -------------- Analysis of the Feeedback Control System
 
-[Se,Re,Te]=sensi(G,K) // S=(I+GK)^-1, T=I-S=GK(I+GK)^-1
+[Se,Re,Te]=sensi(G,K) // S=(I+GK)^-1,    :sensibilidad
+                      //T=I-S=GK(I+GK)^-1  :sensibilidad complementaria
 
 // ------------------ Plot weighting functions
 
