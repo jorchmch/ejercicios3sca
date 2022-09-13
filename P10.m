@@ -1,8 +1,8 @@
-﻿clc,clear;
+clc,clear;
 
 % MIMO system
 % define SISO systems
-sys00=tf([1 0],[ 1 2 4 ]);
+sys00=tf([1],[ 1 2 4 ]); % aea sano
 sys11=tf([-86.41],[15 0.37]);
 sys12=tf([-0.05445],[1 0.524667 0.0873333 0.00185]);
 sys21=tf([29324.85 327.75],[15 0.37]);
